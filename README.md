@@ -9,11 +9,13 @@ Proyek ini bertujuan untuk menganalisis data penggunaan layanan penyewaan sepeda
 ```
 Bike_Sharing_Analysis/
 │-- dataset/
-│   ├── data_terbaru.csv
+│   ├── day.csv
+│   ├── hour.csv
+│-- data_terbaru.csv
 │-- dashboard.py
 │-- requirements.txt
 │-- README.md
-│-- url.txt (Opsional, jika dashboard dideploy)
+│-- url.txt (Opsional)
 ```
 
 ## Cara Menjalankan Dashboard
