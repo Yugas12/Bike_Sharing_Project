@@ -4,18 +4,30 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 
-# Path dataset
-dataset_path = "C:/Users/Wahyu bagas/Downloads/Revisi Dicoding/bike-sharing-analysiss-main/"
-
-# Load dataset
-day_df = pd.read_csv(os.path.join(dataset_path, "data_terbaru.csv"))
-
-# Konversi kolom tanggal
-day_df['dteday'] = pd.to_datetime(day_df['dteday'])
-
 # Judul Dashboard
 st.title("Dashboard Analisis Bike Sharing")
 st.markdown("### Visualisasi Data Penyewaan Sepeda")
+
+# Pastikan path dataset sesuai dengan struktur repo di GitHub
+dataset_path = os.path.join(os.path.dirname(__file__), "bike-sharing-analysiss-main")
+csv_file = os.path.join(dataset_path, "data_terbaru.csv")
+
+# Cek apakah file tersedia
+if os.path.exists(csv_file):
+    day_df = pd.read_csv(csv_file)
+else:
+    # Opsi upload manual jika file tidak ditemukan
+    st.warning("File data_terbaru.csv tidak ditemukan. Silakan upload file CSV secara manual.")
+    uploaded_file = st.file_uploader("Upload data CSV", type="csv")
+    
+    if uploaded_file:
+        day_df = pd.read_csv(uploaded_file)
+        st.success("File berhasil diunggah!")
+    else:
+        st.stop()
+
+# Konversi kolom tanggal
+day_df['dteday'] = pd.to_datetime(day_df['dteday'])
 
 # Sidebar untuk filter bulan
 st.sidebar.header("Filter Data")
@@ -37,7 +49,8 @@ st.subheader("Jumlah Peminjaman Sepeda Berdasarkan Musim")
 season_mapping = {1: "Spring", 2: "Summer", 3: "Fall", 4: "Winter"}
 byseason_df = day_df.groupby(by="season_x").agg({"cnt_x": "sum"}).reset_index()
 byseason_df.rename(columns={"cnt_x": "sum"}, inplace=True)
-byseason_df["season_x"] = byseason_df["season_x"].replace(season_mapping)  # Ganti angka dengan nama musim
+byseason_df["season_x"] = byseason_df["season_x"].replace(season_mapping)
+
 fig, ax = plt.subplots(figsize=(10, 5))
 sns.barplot(x="season_x", y="sum", data=byseason_df, ax=ax)
 ax.set_xlabel(None)
@@ -50,6 +63,7 @@ st.pyplot(fig)
 st.subheader("Total Penyewaan Sepeda per Bulan")
 bymonth_df = day_df.groupby(by="mnth_x").agg({"cnt_x": "sum"}).reset_index()
 bymonth_df.rename(columns={"cnt_x": "sum"}, inplace=True)
+
 fig, ax = plt.subplots(figsize=(10, 5))
 sns.barplot(x=bymonth_df["mnth_x"], y=bymonth_df["sum"], palette="Blues", ax=ax)
 for index, row in bymonth_df.iterrows():
