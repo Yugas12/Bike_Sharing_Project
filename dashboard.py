@@ -23,8 +23,8 @@ if os.path.exists(dataset_path):
     # Sidebar untuk filter bulan
     st.sidebar.header("Filter Data")
     selected_month = st.sidebar.selectbox("Pilih Bulan", options=range(1, 13), 
-                                          format_func=lambda x: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", 
-                                                                 "Agu", "Sep", "Okt", "Nov", "Des"][x-1])
+                                      format_func=lambda x: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", 
+                                                             "Juli", "Agustus", "September", "Oktober", "November", "Desember"][x-1])
     filtered_data = day_df[day_df['mnth_x'] == selected_month]
 
     # Tampilkan data yang difilter
@@ -44,6 +44,7 @@ if os.path.exists(dataset_path):
         y="sum",
         x=byseason_df["season"],  
         data=byseason_df.sort_values(by="season", ascending=False),
+        color='steelblue',  # Menggunakan warna biru
         ax=ax
     )
     ax.set_title("Jumlah Sepeda Berdasarkan Musim", loc="center", fontsize=15)
@@ -64,6 +65,7 @@ if os.path.exists(dataset_path):
     bymonth_df = pd.DataFrame(data)
     fig, ax = plt.subplots(figsize=(10, 5))
     sns.barplot(y="sum", x="mnth", data=bymonth_df.sort_values(by="mnth", ascending=True), color='steelblue', ax=ax)
+
     for index, row in bymonth_df.iterrows():
         ax.text(row['mnth'] - 1, row['sum'], f"{int(row['sum'])}", ha="center", va="bottom", fontsize=10)
     ax.set_title("Jumlah Peminjaman Sepeda per Bulan", loc="center", fontsize=15)
@@ -74,3 +76,4 @@ if os.path.exists(dataset_path):
 
 else:
     st.error(f"Dataset tidak ditemukan! Harap pastikan file 'data_terbaru.csv' ada di folder {os.getcwd()}.")
+
